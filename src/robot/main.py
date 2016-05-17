@@ -17,7 +17,7 @@ application = service.Application('robot test game Server')
     
 def user_action(userid):
     r = LoginRobot("s%s" % ("1000" + str(userid)))
-    r.Login("s%s" % ("1000" + str(userid)))
+    r.reg("s%s" % ("1000" + str(userid)))
     #r.goloubi("s%s" % ("1000" + str(userid)))
     r.setServiceParent(service.IServiceCollection(application)) #@UndefinedVariable
 
@@ -28,7 +28,6 @@ def add_users():
         for i in xrange(users_per):
             if users_curr <= all:
                 reactor.callInThread(user_action, users_curr) #@UndefinedVariable
-                print "11111111------------%s" % users_curr
             users_curr += 1
         reactor.callLater(period, add_users) #@UndefinedVariable
 

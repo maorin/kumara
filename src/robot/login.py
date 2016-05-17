@@ -17,11 +17,11 @@ import config
 
 class LoginRobot(PbService):
     def __init__(self, name):
-         self.name = name
-         #self.Login(name)
+        self.name = name
+        #self.Login(name)
 
     @defer.inlineCallbacks  
-    def Login(self, name):
+    def reg(self, name):
         log.msg('login request, name:%s '% name)
         try:
             LOGIN_connector = protocol.ClientCreator(reactor, PbProtocol )
@@ -33,37 +33,19 @@ class LoginRobot(PbService):
             log.msg( 'Login... connect login error:', e ,self.name)
             reactor.callLater(10, self.Login, name)			
             defer.returnValue(None) 
-        _msg = login_pb2.LoginRequest()
+        _msg = login_pb2.RegisterRequest()
         _msg.user_name = name
+        _msg.password = "password"
         self.plogin.send(_msg)
     
-    @defer.inlineCallbacks  
-    def goloubi(self, name):
-        log.msg('login request, name:%s '% name)
-        try:
-            Go_connector = protocol.ClientCreator(reactor, PbProtocol )
-            self.p = yield Go_connector.connectTCP(config.ip, config.battle_server_port)
-            _factory = PbFactory(self)
-            self.p.factory = _factory
-        except Exception, e:
-            self.p = None
-            log.msg( 'Login... connect login error:', e ,self.name)
-            reactor.callLater(10, self.goloubi, name)			
-            defer.returnValue(None) 
-        _msg = login_pb2.goRequest()
-        _msg.user_name = name
-        self.p.send(_msg)
+
      
-    def loginresponse(self, p, request):
+    def regresponse(self, p, request):
         result = request.result
-        user_name = request.user_name
-        log.msg('loginresponse, result:%s, user_name:%s'% (result, user_name))
+        token = request.token
+        log.msg('loginresponse, result:%s, token:%s'% (result, token))
 
 
-    def goresponse(self, p, request):
-        result = request.result
-        user_name = request.user_name
-        log.msg('goresponse, result:%s, user_name:%s'% (result, user_name))
 
 if __name__ == '__main__':
     aa = LoginRobot("s10009")

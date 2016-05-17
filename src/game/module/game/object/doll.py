@@ -1,8 +1,4 @@
-'''
-Created on 2016年5月17日
-
-@author: maojj
-'''
+#-*-coding: utf-8 -*-
 
 from game.module.game.object.game_object import GameObject
 

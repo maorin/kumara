@@ -11,20 +11,30 @@ import txredisapi as redis
 
 from twisted.internet import defer
 from twisted.internet import reactor
-
-
-
+import pickle
+from game.module.player.user import User
 
 class LoginService(LoginService):
 
     def registerrequest(self, p, request):
-        user_name = request.user_name
-        
+        username = request.user_name
+        password = request.password
         
         _msg = login_pb2.RegisterResponse()
-        _result = '1'
-        _msg.result = _result
-        _msg.user_name = "register been...." + user_name					
+        rc = yield redis.ConnectionPool()
+        v = yield rc.get(username)
+        if v:
+            _msg.result = "0"
+            _msg.token = "register been...."					
+        else:
+            user = User(username, password)
+            pickled_user = pickle.dumps(user)
+            yield rc.set(username, pickled_user)
+            yield rc.set(user.key, pickled_user)
+            log.msg("create user: %s  and key: %s", username, user.key)
+            _msg.result = "1"
+            _msg.token = user.key    
+        yield rc.disconnect()
         p.send(_msg)
     
     """

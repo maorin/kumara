@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='login.proto',
   package='msg',
-  serialized_pb=_b('\n\x0blogin.proto\x12\x03msg\"$\n\x0fRegisterRequest\x12\x11\n\tuser_name\x18\x01 \x02(\t\"5\n\x10RegisterResponse\x12\x0e\n\x06result\x18\x01 \x02(\x0c\x12\x11\n\tuser_name\x18\x02 \x02(\t\"!\n\x0cLoginRequest\x12\x11\n\tuser_name\x18\x01 \x02(\t\"2\n\rLoginResponse\x12\x0e\n\x06result\x18\x01 \x02(\x0c\x12\x11\n\tuser_name\x18\x02 \x02(\t')
+  serialized_pb=_b('\n\x0blogin.proto\x12\x03msg\"6\n\x0fRegisterRequest\x12\x11\n\tuser_name\x18\x01 \x02(\t\x12\x10\n\x08password\x18\x02 \x02(\t\"1\n\x10RegisterResponse\x12\x0e\n\x06result\x18\x01 \x02(\x0c\x12\r\n\x05token\x18\x02 \x02(\t\"3\n\x0cLoginRequest\x12\x11\n\tuser_name\x18\x01 \x02(\t\x12\x10\n\x08password\x18\x02 \x02(\t\".\n\rLoginResponse\x12\x0e\n\x06result\x18\x01 \x02(\x0c\x12\r\n\x05token\x18\x02 \x02(\t')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -39,6 +39,13 @@ _REGISTERREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='password', full_name='msg.RegisterRequest.password', index=1,
+      number=2, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -51,7 +58,7 @@ _REGISTERREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=20,
-  serialized_end=56,
+  serialized_end=74,
 )
 
 
@@ -70,7 +77,7 @@ _REGISTERRESPONSE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='user_name', full_name='msg.RegisterResponse.user_name', index=1,
+      name='token', full_name='msg.RegisterResponse.token', index=1,
       number=2, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -87,8 +94,8 @@ _REGISTERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=58,
-  serialized_end=111,
+  serialized_start=76,
+  serialized_end=125,
 )
 
 
@@ -106,6 +113,13 @@ _LOGINREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='password', full_name='msg.LoginRequest.password', index=1,
+      number=2, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -117,8 +131,8 @@ _LOGINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=113,
-  serialized_end=146,
+  serialized_start=127,
+  serialized_end=178,
 )
 
 
@@ -137,7 +151,7 @@ _LOGINRESPONSE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='user_name', full_name='msg.LoginResponse.user_name', index=1,
+      name='token', full_name='msg.LoginResponse.token', index=1,
       number=2, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -154,8 +168,8 @@ _LOGINRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=148,
-  serialized_end=198,
+  serialized_start=180,
+  serialized_end=226,
 )
 
 DESCRIPTOR.message_types_by_name['RegisterRequest'] = _REGISTERREQUEST
