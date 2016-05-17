@@ -1,0 +1,2 @@
+# kumara
+pvp game server
