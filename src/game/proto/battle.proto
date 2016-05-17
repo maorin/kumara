@@ -1,0 +1,41 @@
+// See README.txt for information and build instructions.
+syntax = "proto2";
+
+package msg;
+
+
+
+
+//创建战场
+
+//刷新卡牌cd
+message cdcompleteRequest {
+   required string user_name = 1;
+}
+
+message cdcompleteResponse {
+   required bytes result = 1;
+   required string user_name = 2;
+}
+
+//命令卡牌出战
+message goRequest {
+   required string user_name = 1;
+}
+
+message goResponse {
+   required bytes result = 1;
+   required string user_name = 2;
+}
+
+//卡牌开火
+message fireRequest {
+   required string user_name = 1;
+}
+
+message fireResponse {
+   required bytes result = 1;
+   required string user_name = 2;
+}
+
+

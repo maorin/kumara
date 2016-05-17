@@ -1,0 +1,16 @@
+.DS_Store
+*.pyc
+/env
+/*.sqlite3
+/media
+!/media/.gitkeep
+/media/uploads
+!/media/uploads/.gitkeep
+*/migrations/*
+!/migrations/.gitkeep
+Thumbs.db
+/logs/*
+/start.log*
+/robot/start.log*
+/oll
+/robot/oll

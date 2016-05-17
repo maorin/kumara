@@ -1,0 +1,39 @@
+生成python文件命令 版本protoc 3.0
+protoc --csharp_out=.  login.proto
+
+
+protoc --python_out=.  login.proto
+protoc --python_out=.  lobby.proto
+protoc --python_out=.  battle.proto
+
+-----------------------------
+unity3d  propoc 2.6.0
+
+maojingjingdeMacBook-Pro:src maojj$ pip install --upgrade pip
+Collecting pip
+  Downloading pip-8.1.2-py2.py3-none-any.whl (1.2MB)
+    100% |████████████████████████████████| 1.2MB 46kB/s 
+Installing collected packages: pip
+  Found existing installation: pip 8.1.1
+    Uninstalling pip-8.1.1:
+      Successfully uninstalled pip-8.1.1
+Successfully installed pip-8.1.2
+maojingjingdeMacBook-Pro:src maojj$ pip install protobuf==2.6.0
+Collecting protobuf==2.6.0
+Requirement already satisfied (use --upgrade to upgrade): setuptools in /usr/local/lib/python2.7/site-packages (from protobuf==2.6.0)
+Installing collected packages: protobuf
+Successfully installed protobuf-2.6.0
+
+maojingjingdeMacBook-Pro:src maojj$ cp /usr/local/Cellar/protobuf260/2.6.0/bin/protoc /usr/local/bin/
+maojingjingdeMacBook-Pro:src maojj$ protoc --version
+libprotoc 2.6.0
+
+
+
+生成python文件命令 版本protoc 3.0
+protoc --csharp_out=.  login.proto
+
+
+protoc --python_out=.  login.proto
+protoc --python_out=.  lobby.proto
+protoc --python_out=.  battle.proto

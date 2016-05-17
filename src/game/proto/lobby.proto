@@ -1,0 +1,21 @@
+// See README.txt for information and build instructions.
+syntax = "proto2";
+
+package msg;
+
+//查看自己的卡牌
+
+
+
+//pvp 准备开战
+message ReadyRequest {
+   required string user_name = 1;
+}
+
+message ReadyResponse {
+   required bytes result = 1;
+   required string user_name = 2;
+}
+
+
+
