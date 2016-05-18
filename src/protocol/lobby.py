@@ -6,11 +6,10 @@ from twisted.application.service import Service
 import struct
 from twisted.python import failure, log
 import time
-from game.proto import login_pb2
-import txredisapi as redis
-from twisted.internet.defer import Deferred, maybeDeferred
+from game.proto import lobby_pb2
+from game.connect.manager import ConnectionManager
 
-class PbProtocol(protocol.Protocol, policies.TimeoutMixin):
+class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
     BUFFER = ''
     timeOut = 500
     header_format = 'IH'
@@ -18,9 +17,8 @@ class PbProtocol(protocol.Protocol, policies.TimeoutMixin):
     def connectionMade(self):
         self.transport.setTcpKeepAlive(True)
         self.setTimeout(self.timeOut)
-        #self.transport.setTcpNoDelay(True)
+        self.transport.setTcpNoDelay(True)
         peer = self.transport.getPeer()
-        #d = maybeDeferred(self.factory.service.get_pool)
 
         log.msg( 'Connection made. host, port:', peer.host, peer.port)
 
@@ -39,10 +37,10 @@ class PbProtocol(protocol.Protocol, policies.TimeoutMixin):
                 else:
                     msg_name = struct.unpack('%ds'% len_msg_name,  self.BUFFER[self.header_length:len_msg_name + self.header_length])[0]
                     _func = getattr(self.factory.service, '%s' % msg_name.lower(), None) 
-                    _msg =  getattr(login_pb2, msg_name, None)
+                    _msg =  getattr(lobby_pb2, msg_name, None)
                     
                     if _func and _msg:
-                        _request = getattr(login_pb2, msg_name)()
+                        _request = getattr(lobby_pb2, msg_name)()
                         if len_pb_data <= len(self.BUFFER[self.header_length + len_msg_name :]):
                             _request.ParseFromString(self.BUFFER[self.header_length + len_msg_name : self.header_length + len_msg_name + len_pb_data])
                             reactor.callLater(0, _func, self, _request) 
@@ -78,20 +76,18 @@ class PbProtocol(protocol.Protocol, policies.TimeoutMixin):
             self.transport.write(_header + pb_data)
 
     def connectionLost(self, reason):
+        
         self.setTimeout(None)
 
-class PbFactory(protocol.ServerFactory):
-    protocol = PbProtocol
+class LobbyFactory(protocol.ServerFactory):
+    protocol = LobbyProtocol
     connections = 0
     
     def __init__(self, service):
         self.service = service
-
-
+        #self.connmanager = ConnectionManager()
         
     def buildProtocol(self, addr):
-        #self.rc = yield redis.ConnectionPool()
-        
         if self.connections <= 5000:
             p = protocol.ServerFactory.buildProtocol(self, addr)
             self.connections += 1
@@ -102,20 +98,11 @@ class PbFactory(protocol.ServerFactory):
     def loseConnection(self, player_id):
         self.connections -= 1
 
-class PbService(Service):
+class LobbyService(Service):
+        
     def startService(self):
-        '''
-        self.rc = redis.ConnectionPool()
-        log.msg('%s redis connecning...' % self.rc)
-        '''
-        log.msg('%s begin starting...' % self.__class__)
+        log.msg('%s begin lobby server starting...' % self.__class__)
 
     def stopService(self):
-        '''
-        try:
-            self.rc.disconnect()
-        except redis.ConnectionError, e:
-            print str(e)
-        '''
-        log.msg('%s is stoping...' % self.__class__)
+        log.msg('%s is lobby server stoping...' % self.__class__)
 

@@ -18,28 +18,28 @@ reactor.suggestThreadPoolSize(50)
 
 from twisted.application import internet, service
 
-from game.service.loginserver import LoginService
-from game.service.lobbyserver import LobbyService
-from game.service.battleserver import BattleService
+from game.service.loginserver import LoginServer
+from game.service.lobbyserver import LobbyServer
+from game.service.battleserver import BattleServer
 import config
-from game.protocol.login import LoginFactory
-from game.protocol.lobby import LobbyFactory
-from game.protocol.battle import BattleFactory
+from protocol.login import LoginFactory
+from protocol.lobby import LobbyFactory
+from protocol.battle import BattleFactory
 
 
 loubiService = service.MultiService()
 
 
-login_server = LoginService()
+login_server = LoginServer()
 #login_server.setServiceParent(service.IServiceCollection(application)) #@UndefinedVariable
 _login_factory = LoginFactory(login_server)
 internet.TCPServer(config.login_server_port, _login_factory).setServiceParent(loubiService)
 
-lobby_server = LobbyService()
+lobby_server = LobbyServer()
 _lobby_factory = LobbyFactory(lobby_server)
 internet.TCPServer(config.lobby_server_port, _lobby_factory).setServiceParent(loubiService)
 
-battle_server = BattleService()
+battle_server = BattleServer()
 _battle_factory = BattleFactory(battle_server)
 internet.TCPServer(config.battle_server_port, _battle_factory).setServiceParent(loubiService)
 

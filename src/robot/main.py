@@ -16,8 +16,8 @@ application = service.Application('robot test game Server')
 
     
 def user_action(userid):
-    r = LoginRobot("s%s" % ("1000" + str(userid)))
-    r.reg("s%s" % ("1000" + str(userid)))
+    r = LoginRobot("s%s" % ("2000" + str(userid)))
+    r.register("s%s" % ("2000" + str(userid)))
     #r.goloubi("s%s" % ("1000" + str(userid)))
     r.setServiceParent(service.IServiceCollection(application)) #@UndefinedVariable
 

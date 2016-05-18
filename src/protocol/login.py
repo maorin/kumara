@@ -17,12 +17,13 @@ class LoginProtocol(protocol.Protocol, policies.TimeoutMixin):
     def connectionMade(self):
         self.transport.setTcpKeepAlive(True)
         self.setTimeout(self.timeOut)
-        self.transport.setTcpNoDelay(True)
+        #self.transport.setTcpNoDelay(True)
         peer = self.transport.getPeer()
 
         log.msg( 'Connection made. host, port:', peer.host, peer.port)
 
     def dataReceived(self, data):
+        log.msg("--------enter dataReceived ---------")
         self.resetTimeout()
         self.transport.pauseProducing()
         self.BUFFER += data
@@ -38,12 +39,17 @@ class LoginProtocol(protocol.Protocol, policies.TimeoutMixin):
                     msg_name = struct.unpack('%ds'% len_msg_name,  self.BUFFER[self.header_length:len_msg_name + self.header_length])[0]
                     _func = getattr(self.factory.service, '%s' % msg_name.lower(), None) 
                     _msg =  getattr(login_pb2, msg_name, None)
-                    
+                    log.msg("----------_func------%s " % _func)
+                    log.msg("----------_msg------%s " % _msg)
+                    log.msg("----------msg_name------%s " % msg_name)
                     if _func and _msg:
                         _request = getattr(login_pb2, msg_name)()
+                        log.msg("----------_request------%s " % type(_request))
                         if len_pb_data <= len(self.BUFFER[self.header_length + len_msg_name :]):
                             _request.ParseFromString(self.BUFFER[self.header_length + len_msg_name : self.header_length + len_msg_name + len_pb_data])
-                            reactor.callLater(0, _func, self, _request) 
+                            log.msg("-------------self---------%s" % self)
+                            a = reactor.callLater(0, _func, self, _request)
+                            log.msg("aaaa %s" % a)
                             self.BUFFER = self.BUFFER[self.header_length + len_msg_name + len_pb_data:]
                             buffer_length = len(self.BUFFER) 
                             continue
@@ -81,7 +87,6 @@ class LoginProtocol(protocol.Protocol, policies.TimeoutMixin):
 
 class LoginFactory(protocol.ServerFactory):
     protocol = LoginProtocol
-    
     connections = 0
     
     def __init__(self, service):

@@ -2,11 +2,11 @@ import sys
 _path = ('..')
 if _path not in sys.path:
     sys.path.append(_path)
-from game.protocol.lobby  import LobbyService
+from protocol.lobby  import LobbyService
 from twisted.python import log
 from game.proto import lobby_pb2
 
-class LobbyService(LobbyService):
+class LobbyServer(LobbyService):
 
     def loginrequest(self, p, request):
         user_name = request.user_name

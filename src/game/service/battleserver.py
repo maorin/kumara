@@ -5,11 +5,11 @@ import sys
 _path = ('..')
 if _path not in sys.path:
     sys.path.append(_path)
-from game.protocol.battle import BattleService
+from protocol.battle import BattleService
 from twisted.python import log
 from game.proto import battle_pb2
 
-class BattleService(BattleService):
+class BattleServer(BattleService):
     #命令卡牌出战   
     def gorequest(self, p, request):
         user_name = request.user_name
