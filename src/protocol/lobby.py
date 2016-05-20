@@ -7,7 +7,7 @@ import struct
 from twisted.python import failure, log
 import time
 from game.proto import lobby_pb2
-from game.connect.manager import ConnectionManager
+from connect.manager import ConnectionManager
 
 class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
     BUFFER = ''
@@ -85,7 +85,7 @@ class LobbyFactory(protocol.ServerFactory):
     
     def __init__(self, service):
         self.service = service
-        #self.connmanager = ConnectionManager()
+        self.connmanager = ConnectionManager()
         
     def buildProtocol(self, addr):
         if self.connections <= 5000:

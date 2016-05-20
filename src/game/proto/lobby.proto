@@ -3,19 +3,15 @@ syntax = "proto2";
 
 package msg;
 
-//查看自己的卡牌
-
-
-
-//pvp 准备开战
 message ReadyRequest {
-   required string user_name = 1;
+   required string token = 1;
 }
 
 message ReadyResponse {
    required bytes result = 1;
-   required string user_name = 2;
 }
-
-
+//find other user, return channel  
+message EnterBattleResponse {
+   required string channel = 1;
+}
 
