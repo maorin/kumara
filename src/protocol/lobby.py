@@ -36,9 +36,13 @@ class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
                     break
                 else:
                     msg_name = struct.unpack('%ds'% len_msg_name,  self.BUFFER[self.header_length:len_msg_name + self.header_length])[0]
+                    log.msg("----------msg_name------%s " % msg_name)
                     _func = getattr(self.factory.service, '%s' % msg_name.lower(), None) 
+                    log.msg("----------self.factory.service------%s " % self.factory.service)
                     _msg =  getattr(lobby_pb2, msg_name, None)
-                    
+                    log.msg("----------_func------%s " % _func)
+                    log.msg("----------_msg------%s " % _msg)
+                    log.msg("----------msg_name------%s " % msg_name)
                     if _func and _msg:
                         _request = getattr(lobby_pb2, msg_name)()
                         if len_pb_data <= len(self.BUFFER[self.header_length + len_msg_name :]):
@@ -51,7 +55,7 @@ class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
                             log.msg( 'not enough buffer for pb_data, waiting for new data coming ... ')
                             break
                     else:
-                        log.msg( 'no such message handler. detail:', _func, hasattr(login_pb2, msg_name), repr(self.BUFFER))
+                        log.msg( 'no such message handler. detail:', _func, hasattr(lobby_pb2, msg_name), repr(self.BUFFER))
                         if self.fromclient:
                             self.transport.loseConnection()
                         else:

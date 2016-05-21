@@ -8,7 +8,7 @@ from game.proto import lobby_pb2
 
 class LobbyServer(LobbyService):
 
-    def loginrequest(self, p, request):
+    def readyrequest(self, p, request):
         user_name = request.user_name
         log.msg("loginrequest", user_name)
 
