@@ -18,6 +18,10 @@ class ConnectionManager:
         '''获取当前连接数量'''
         return len(self._connections.items())
     
+    
+    def getConnList(self):
+        return self._connections
+    
     def addConnection(self, conn):
         '''加入一条连接
         @param _conn: Conn object

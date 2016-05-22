@@ -15,14 +15,11 @@ class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
     header_format = 'IH'
     header_length = struct.calcsize(header_format)
     def connectionMade(self):
-        log.msg('Client %d login in.[%s,%d]'%(self.transport.sessionno,\
-                self.transport.client[0],self.transport.client[1]))
         self.transport.setTcpKeepAlive(True)
         self.setTimeout(self.timeOut)
         self.transport.setTcpNoDelay(True)
         peer = self.transport.getPeer()
         
-        self.factory.connmanager.addConnection(self)
 
         log.msg( 'Connection made. host, port:', peer.host, peer.port)
 
@@ -112,8 +109,7 @@ class LobbyFactory(protocol.ServerFactory):
         self.connections -= 1
 
 class LobbyService(Service):
-    ids = []
-    
+        
     def startService(self):
         log.msg('%s begin lobby server starting...' % self.__class__)
 

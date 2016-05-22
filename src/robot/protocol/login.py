@@ -6,27 +6,24 @@ from twisted.application.service import Service
 import struct
 from twisted.python import failure, log
 import time
-from game.proto import lobby_pb2
-from connect.manager import ConnectionManager
+from game.proto import login_pb2
 
-class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
+
+class LoginProtocol(protocol.Protocol, policies.TimeoutMixin):
     BUFFER = ''
     timeOut = 500
     header_format = 'IH'
     header_length = struct.calcsize(header_format)
     def connectionMade(self):
-        log.msg('Client %d login in.[%s,%d]'%(self.transport.sessionno,\
-                self.transport.client[0],self.transport.client[1]))
         self.transport.setTcpKeepAlive(True)
         self.setTimeout(self.timeOut)
-        self.transport.setTcpNoDelay(True)
+        #self.transport.setTcpNoDelay(True)
         peer = self.transport.getPeer()
-        
-        self.factory.connmanager.addConnection(self)
 
         log.msg( 'Connection made. host, port:', peer.host, peer.port)
 
     def dataReceived(self, data):
+        log.msg("--------enter dataReceived ---------")
         self.resetTimeout()
         self.transport.pauseProducing()
         self.BUFFER += data
@@ -40,18 +37,19 @@ class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
                     break
                 else:
                     msg_name = struct.unpack('%ds'% len_msg_name,  self.BUFFER[self.header_length:len_msg_name + self.header_length])[0]
-                    log.msg("----------msg_name------%s " % msg_name)
                     _func = getattr(self.factory.service, '%s' % msg_name.lower(), None) 
-                    log.msg("----------self.factory.service------%s " % self.factory.service)
-                    _msg =  getattr(lobby_pb2, msg_name, None)
+                    _msg =  getattr(login_pb2, msg_name, None)
                     log.msg("----------_func------%s " % _func)
                     log.msg("----------_msg------%s " % _msg)
                     log.msg("----------msg_name------%s " % msg_name)
                     if _func and _msg:
-                        _request = getattr(lobby_pb2, msg_name)()
+                        _request = getattr(login_pb2, msg_name)()
+                        log.msg("----------_request------%s " % type(_request))
                         if len_pb_data <= len(self.BUFFER[self.header_length + len_msg_name :]):
                             _request.ParseFromString(self.BUFFER[self.header_length + len_msg_name : self.header_length + len_msg_name + len_pb_data])
-                            reactor.callLater(0, _func, self, _request) 
+                            log.msg("-------------self---------%s" % self)
+                            a = reactor.callLater(0, _func, self, _request)
+                            log.msg("aaaa %s" % a)
                             self.BUFFER = self.BUFFER[self.header_length + len_msg_name + len_pb_data:]
                             buffer_length = len(self.BUFFER) 
                             continue
@@ -59,7 +57,7 @@ class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
                             log.msg( 'not enough buffer for pb_data, waiting for new data coming ... ')
                             break
                     else:
-                        log.msg( 'no such message handler. detail:', _func, hasattr(lobby_pb2, msg_name), repr(self.BUFFER))
+                        log.msg( 'no such message handler. detail:', _func, hasattr(login_pb2, msg_name), repr(self.BUFFER))
                         if self.fromclient:
                             self.transport.loseConnection()
                         else:
@@ -84,23 +82,18 @@ class LobbyProtocol(protocol.Protocol, policies.TimeoutMixin):
             self.transport.write(_header + pb_data)
 
     def connectionLost(self, reason):
-        '''
-        连接断开处理
-        log.msg('Client %d login out.'%(self.transport.sessionno))
-        self.factory.doConnectionLost(self)
-        self.factory.connmanager.dropConnectionByID(self.transport.sessionno)
-        '''    
+        
         self.setTimeout(None)
 
-class LobbyFactory(protocol.ServerFactory):
-    protocol = LobbyProtocol
+class LoginFactory(protocol.ServerFactory):
+    protocol = LoginProtocol
     connections = 0
     
     def __init__(self, service):
         self.service = service
-        self.connmanager = ConnectionManager()
         
     def buildProtocol(self, addr):
+        
         if self.connections <= 5000:
             p = protocol.ServerFactory.buildProtocol(self, addr)
             self.connections += 1
@@ -111,12 +104,11 @@ class LobbyFactory(protocol.ServerFactory):
     def loseConnection(self, player_id):
         self.connections -= 1
 
-class LobbyService(Service):
-    ids = []
-    
+class LoginService(Service):
+        
     def startService(self):
-        log.msg('%s begin lobby server starting...' % self.__class__)
+        log.msg('%s begin login server starting...' % self.__class__)
 
     def stopService(self):
-        log.msg('%s is lobby server stoping...' % self.__class__)
+        log.msg('%s is login server stoping...' % self.__class__)
 

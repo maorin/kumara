@@ -31,12 +31,12 @@ loubiService = service.MultiService()
 
 
 login_server = LoginServer()
-#login_server.setServiceParent(service.IServiceCollection(application)) #@UndefinedVariable
 _login_factory = LoginFactory(login_server)
 internet.TCPServer(config.login_server_port, _login_factory).setServiceParent(loubiService)
 
 lobby_server = LobbyServer()
 _lobby_factory = LobbyFactory(lobby_server)
+#internet.TCPServer(config.lobby_server_port, _lobby_factory).setServiceParent(loubiService)
 internet.TCPServer(config.lobby_server_port, _lobby_factory).setServiceParent(loubiService)
 
 battle_server = BattleServer()

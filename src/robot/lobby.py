@@ -41,7 +41,11 @@ class LobbyRobot(LobbyService):
     
     def readyresponse(self, p, request):
         result = request.result
-        log.msg('registerresponse, result:%s'% (result))
+        log.msg('readyresponse, result:%s'% (result))
+    
+    def enterbattleresponse(self, p, request):
+        channel = request.channel
+        log.msg('enterbattleresponse, channel:%s'% (channel))
     
 
 

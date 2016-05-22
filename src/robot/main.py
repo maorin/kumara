@@ -65,7 +65,7 @@ def ready_user():
         reactor.callLater(period, ready_user) #@UndefinedVariable
 
 
-reactor.callLater(20, ready_user)
+reactor.callLater(5, ready_user)
 
 
 
