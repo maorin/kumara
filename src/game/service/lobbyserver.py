@@ -16,18 +16,22 @@ class LobbyServer(LobbyService):
         log.msg("readyrequest", token)
         log.msg("---------%s", self.ids)
         
-        
+        #TODO 匹配对手算法
         if self.ids:
+            
             opp_id = random.choice(self.ids)
             self.ids.remove(opp_id)
             opp_p = p.factory.connmanager.getConnectionByID(opp_id)
             _msg = lobby_pb2.EnterBattleResponse()
             _msg.channel = "111111110010"
+            #服务 创建战场channel
+            
             log.msg("--------opp_p-----%s", opp_p)
             p.send(_msg)
             opp_p.send(_msg)
             
-        else:        
+        else:
+            #TODO 使用抽像有连接类的id service方法中不能用transport.sessionno        
             self.ids.append(p.transport.sessionno)
             _msg = lobby_pb2.ReadyResponse()
             _msg.result = "1"

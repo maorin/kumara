@@ -19,3 +19,9 @@ class BattleServer(BattleService):
         _msg.result = '1'
         _msg.user_name = "222222222222222999999999999999999999" + user_name                  
         p.send(_msg)
+    
+        
+    def enterbattlerequest(self, p, request):
+        #TODO
+        #
+        pass

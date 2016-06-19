@@ -15,11 +15,10 @@ class Connection:
         self.instance.transport.loseConnection()
     
     def send(self, msg):
+        '''
+        发送消息
+        '''
         self.instance.send(msg)
-    
-    def safeToWriteData(self,topicID,msg):
-        """发送消息
-        """
-        self.instance.safeToWriteData(msg,topicID)
+
         
         
